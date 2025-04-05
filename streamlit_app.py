@@ -22,15 +22,16 @@ user_input = st.chat_input("Describe your problems here!!!!!!")
 
 # Function to get a response from OpenAI with health advice
 def get_response(prompt):
-    # Here, you may include a more specific prompt or fine-tune the assistant's instructions to provide general remedies
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
+            {"role": "system", "content": "You are a helpful and cautious medical assistant. You only answer questions related to health symptoms and general medical advice. If a user asks something outside of the medical domain, politely refuse and redirect them to focus on health-related concerns."}
+        ] + [
             {"role": m["role"], "content": m["content"]}
             for m in st.session_state.messages
         ] + [{"role": "user", "content": prompt}]
     )
-    # Access the content directly as an attribute
+      # Access the content directly as an attribute
     return response.choices[0].message.content
 
 # Process and display response if there's input
